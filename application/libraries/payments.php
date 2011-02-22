@@ -20,7 +20,6 @@ class Payments
 		{
 			return (object) array('status' => 'failure', 'response' => $payment->response);
 		}
-		print_r($payment);
 	}
 	
 	private function make_recurring_payment($payment_module, $billing_data, $payment_function)
