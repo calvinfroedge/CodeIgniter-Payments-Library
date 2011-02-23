@@ -14,7 +14,7 @@ class Payments
 		$payment = $this->$payment_function($payment_module, $billing_data, $payment_function);
 		if($payment->status == 'success')
 		{
-			return (object) array('status' => 'success');
+			return (object) array('status' => 'success', 'response' => $payment->response);
 		}
 		else
 		{
