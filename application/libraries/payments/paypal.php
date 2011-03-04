@@ -6,6 +6,7 @@ class PayPal
 	function __construct()
 	{
 		$this->ci =& get_instance();
+		$this->ci->load->config('payments');
 		$this->ci->load->config('payments/paypal');
 		$this->endpoint = $this->ci->config->item('paypal_api_endpoint');
 		$this->settings = array(
@@ -14,6 +15,37 @@ class PayPal
 			'VERSION' => $this->ci->config->item('paypal_api_version'),
 			'SIGNATURE'	=> $this->ci->config->item('paypal_api_signature'),		
 		);
+	}
+
+	/**
+	 * Create a new recurring payment
+	 *
+	 * @param	array
+	 * @return	object
+	 */		
+	public function get_recurring_profile_info($profile_id)
+	{
+		$function_settings = array(
+		'DESC'	=> $this->ci->config->item('paypal_api_service_description'),
+		'METHOD'	=> 'GetRecurringPaymentsProfileDetails'
+		);
+		$data = array(
+			'ProfileID' => $profile_id
+		);
+		$return_data = $this->handle_query(array_merge($this->settings, $function_settings), $data, $this->endpoint);
+		
+		$return_array = array(
+			'profile_id' => $return_data->response['PROFILEID'],
+			'status' => $return_data->response['STATUS'],
+			'next_billing_date' => $return_data->response['NEXTBILLINGDATE'],
+			'amount' => $return_data->response['AMT'],
+			'billing_period' => $return_data->response['BILLINGPERIOD'],
+			'billing_frequency' => $return_data->response['BILLINGFREQUENCY'],
+			'billing_method' => $this->ci->config->item('payment-system_paypal'),
+			'billing_type' => $this->ci->config->item('recurring_payment-type')
+		);
+		
+		return (object) $return_array;
 	}
 
 	/**
@@ -42,6 +74,110 @@ class PayPal
 		);
 		
 		return $this->handle_query(array_merge($this->settings, $function_settings), array_combine($billing_keys, $billing_data), $this->endpoint);
+	}
+
+	/**
+	 * Update an existing payments subscription
+	 *
+	 * @param	array
+	 * @return	object
+	 */		
+	public function update_billing_info($billing_data)
+	{
+		$billing_keys = array(
+			'PROFILEID',
+			'CREDITCARDTYPE',
+			'ACCT',
+			'EXPDATE',
+			'FIRSTNAME',
+			'LASTNAME',
+			'PROFILESTARTDATE',
+			'BILLINGPERIOD',
+			'BILLINGFREQUENCY',
+			'AMT'
+		);
+		
+		$function_settings = array(
+		'DESC'	=> $this->ci->config->item('paypal_api_service_description'),
+		'METHOD'	=> 'UpdateRecurringPaymentsProfile'
+		);
+		
+		return $this->handle_query(array_merge($this->settings, $function_settings), array_combine($billing_keys, $billing_data), $this->endpoint);
+	}
+
+	/**
+	 * Create a new recurring payment
+	 *
+	 * @param	array
+	 * @return	object
+	 */		
+	public function cancel_subscription($profile_id)
+	{
+		$request_params = array(
+			'PROFILEID',
+			'ACTION'
+		);
+		
+		$request_values = array(
+			$profile_id,
+			'Cancel'
+		);
+		
+		$function_settings = array(
+		'METHOD'	=> 'ManageRecurringPaymentsProfileStatus'
+		);
+		
+		return $this->handle_query(array_merge($this->settings, $function_settings), array_combine($request_params, $request_values), $this->endpoint);
+	}
+
+	/**
+	 * Suspend a subscription
+	 *
+	 * @param	string
+	 * @return	object
+	 */		
+	public function suspend_subscription($profile_id)
+	{
+		$request_params = array(
+			'PROFILEID',
+			'ACTION'
+		);
+		
+		$request_values = array(
+			$profile_id,
+			'Suspend'
+		);
+		
+		$function_settings = array(
+		'METHOD'	=> 'ManageRecurringPaymentsProfileStatus'
+		);
+		
+		return $this->handle_query(array_merge($this->settings, $function_settings), array_combine($request_params, $request_values), $this->endpoint);
+	}
+
+	/**
+	 * Activate a subscription
+	 *
+	 * @param	int
+	 * @return	object
+	 */		
+	public function activate_subscription($profile_id)
+	{
+		$request_params = array(
+			'PROFILEID',
+			'ACTION'
+		);
+		
+		$request_values = array(
+			$profile_id,
+			'Reactivate'
+		);
+		
+		$function_settings = array(
+		'METHOD'	=> 'ManageRecurringPaymentsProfileStatus'
+		);
+		
+		return $this->handle_query(array_merge($this->settings, $function_settings), array_combine($request_params, $request_values), $this->endpoint);
 	}
 
 	/**

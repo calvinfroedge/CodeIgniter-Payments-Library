@@ -29,9 +29,20 @@ $config['payment-system_default']		= 'paypal';
 | The types of payments which can be sent
 |
 */
-$config['payment_types'] = array(
-	'onetime',
-	'recurring'
-);
+$config['recurring_payment-type'] = 'recurring';
+$config['onetime_payment-type'] = 'flat_rate';
 
 $config['default_payment-type'] = 'recurring';
+
+/*
+|--------------------------------------------------------------------------
+|  Public function variables
+|--------------------------------------------------------------------------
+|
+| Variables for commonly used public functions of the payments library.
+|
+*/
+$config['payment-function_update-billing-info'] = 'update_billing_info';
+$config['payment-function_cancel_subscription'] = 'cancel_subscription';
+$config['payment-function_suspend_subscription'] = 'suspend_subscription';
+$config['payment-function_activate_subscription'] = 'activate_subscription';
