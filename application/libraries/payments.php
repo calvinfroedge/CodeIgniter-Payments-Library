@@ -34,10 +34,11 @@ class Payments
 	 * @param	array
 	 * @return	object
 	 */			
-	public function make_payment($billing_data)
+	public function make_payment($billing_data, $trial)
 	{
 		$payment_function = 'make_'.$this->check_payment_type().'_payment';
-		$payment = $this->$payment_function($this->check_payment_module(), $billing_data, $payment_function);
+		$payment = $this->$payment_function($this->check_payment_module(), $billing_data, $payment_function, $trial);
+		
 		if($payment->status == 'success')
 		{
 			return (object) array('status' => 'success', 'response' => $payment->response);
@@ -56,9 +57,9 @@ class Payments
 	 * @param	string
 	 * @return	object
 	 */	
-	private function make_recurring_payment($payment_module, $billing_data, $payment_function)
+	private function make_recurring_payment($payment_module, $billing_data, $payment_function, $trial = FALSE)
 	{
-		return $this->ci->$payment_module->$payment_function($billing_data);
+		return $this->ci->$payment_module->$payment_function($billing_data, $trial);
 	}
 	
 	private function make_onetime_payment()
@@ -144,17 +145,6 @@ class Payments
 	}
 
 	/**
-	 * Set the payment type
-	 *
-	 * @return	string
-	 */	
-	private function set_payment_type($type)
-	{
-		$this->ci->session->unset_userdata('payment_type');
-		$this->ci->session->set_userdata('payment_type', $type);
-	}
-
-	/**
 	 * Check payment module
 	 *
 	 * @return	string
@@ -162,19 +152,17 @@ class Payments
 	private function check_payment_module()
 	{
 		return $this->ci->config->item('payment-system_default');
-		return ($this->ci->session->userdata('payment_system') != NULL ? $this->ci->session->userdata('payment_system')
-		: $this->ci->config->item('payment-system_default'));
 	}
-
+	
 	/**
-	 * Set the payment type
+	 * Set payment amount
 	 *
-	 * @return	string
+	 * @param  array
+	 * @return	object
 	 */	
-	private function set_payment_module($module)
+	public function set_payment_amount($billing_variables)
 	{
-		$this->ci->session->unset_userdata('payment_type');
-		$this->ci->session->set_userdata('payment_system', $module);
-	}
+		return number_format($billing_variables->child_billing_rate * $this->ci->session->userdata('num_children') + $billing_variables->family_billing_rate, 2, '.', '');
+	}	
 	
 }

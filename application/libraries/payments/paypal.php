@@ -18,7 +18,7 @@ class PayPal
 	}
 
 	/**
-	 * Create a new recurring payment
+	 * Get profile info for a particular profile id
 	 *
 	 * @param	array
 	 * @return	object
@@ -41,6 +41,7 @@ class PayPal
 			'amount' => $return_data->response['AMT'],
 			'billing_period' => $return_data->response['BILLINGPERIOD'],
 			'billing_frequency' => $return_data->response['BILLINGFREQUENCY'],
+			'failedpayments'	=> $return_data->response['FAILEDPAYMENTCOUNT'],
 			'billing_method' => $this->ci->config->item('payment-system_paypal'),
 			'billing_type' => $this->ci->config->item('recurring_payment-type')
 		);
@@ -54,7 +55,7 @@ class PayPal
 	 * @param	array
 	 * @return	object
 	 */		
-	public function make_recurring_payment($billing_data)
+	public function make_recurring_payment($billing_data, $trial = FALSE)
 	{
 		$billing_keys = array(
 			'CREDITCARDTYPE',
@@ -65,8 +66,29 @@ class PayPal
 			'PROFILESTARTDATE',
 			'BILLINGPERIOD',
 			'BILLINGFREQUENCY',
-			'AMT'
+			'AMT',
+			'MAXFAILEDPAYMENTS'
 		);
+		
+		if($trial)
+		{
+			$billing_keys = array(
+				'CREDITCARDTYPE',
+				'ACCT',
+				'EXPDATE',
+				'FIRSTNAME',
+				'LASTNAME',
+				'PROFILESTARTDATE',
+				'BILLINGPERIOD',
+				'BILLINGFREQUENCY',
+				'AMT',
+				'MAXFAILEDPAYMENTS',
+				'TRIALBILLINGPERIOD',
+				'TRIALBILLINGFREQUENCY',
+				'TRIALAMT',
+				'TRIALTOTALBILLINGCYCLES'
+			);			
+		}
 		
 		$function_settings = array(
 		'DESC'	=> $this->ci->config->item('paypal_api_service_description'),
@@ -106,7 +128,7 @@ class PayPal
 	}
 
 	/**
-	 * Create a new recurring payment
+	 * Cancel a recurring subscription
 	 *
 	 * @param	array
 	 * @return	object
@@ -219,6 +241,7 @@ class PayPal
 		curl_close($curl);
 		
 		// Return the response
+	
 		return $response;	
 	}
 
@@ -230,6 +253,7 @@ class PayPal
 	 */		
 	private function parse_response($response)
 	{
+		
 		$results = explode('&',urldecode($response));
 		foreach($results as $result)
 		{
@@ -237,11 +261,11 @@ class PayPal
 			$response_array[$key]=$value;
 		}
 		
-		//$response = (object) $responses;
 		$return_object = array();
 		
 		//Set the response status
-		($response_array['ACK'] == 'Failure' ? $failure = TRUE : $success = TRUE );
+		
+		($response_array['ACK'] == 'Success' ? $success = TRUE : $failure = TRUE );
 
 		if(isset($failure)){
 			$return_object[] = array('status'=>'failure') + array('response'=>$response_array['L_LONGMESSAGE0']);
