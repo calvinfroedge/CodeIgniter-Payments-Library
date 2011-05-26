@@ -32,6 +32,7 @@ $config['payment-system_default']		= 'paypal';
 $config['recurring_payment-type'] = 'recurring';
 $config['onetime_payment-type'] = 'flat_rate';
 
+//Payment type to use by default
 $config['default_payment-type'] = 'recurring';
 
 /*
