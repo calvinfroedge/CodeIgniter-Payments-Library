@@ -17,7 +17,7 @@ Examples
 Recurring Payments
 ------------------
 
-### Making Payments
+### Making Recurring Payments with PayPal
 
 Note that the fields you put in $billing_data may vary depending on which payment system you use.  Different libraries will have different formats they request your data in.  Here is an example for PayPal (using recurring subscriptions):
 
@@ -27,25 +27,23 @@ First, you need to make sure you have set payment type and payment method to you
 	$this->session->set_userdata(array('payment_type' => 'recurring', 'payment_system' => 'paypal'));
 `
 
-Now, make your call.  Note that the second parameter could be just true or false.  I included both $billing_data array and $trial for clarity.
+Now, make your call, passing in an array for $billing_data and a boolean for $trial (if you want to specify this is a free trial.
+
+The params are (don't specify a key):
+
+- Credit card type
+- Credit card number
+- Expire month (mm)
+- Expire year (yyyy)
+- First name
+- Last name
+- Billing period (month or year)
+- Billing frequency (how many billing cycles during the period)
+- Amount
+- Max times a payment can fail before the subscription is invalidated.
 
 `
-	$billing_data = array( &#13;
-	$this->form_validation->set_value('billing_cc_type'), //credit card type &#13;
-	$this->form_validation->set_value('billing_cc_number'), //credit card number &#13;
-	$this->form_validation->set_value('billing_exp_date_mm').set_value('billing_exp_date_yyyy'), //credit card expiration date &#13;
-	$this->form_validation->set_value('billing_first_name'), //billing first name &#13;
-	$this->form_validation->set_value('billing_last_name'), //billing last name &#13;
-	gmdate("c"), &#13;
-	$billing_variables->billing_period, //month, year, etc &#13;
-	$billing_variables->billing_frequency, //how many times per period &#13;
-	$amount, //the amount to bill &#13;
-	$this->config->item('max_failed_payments') //The number of times a payment is allowed to fail &#13;
-	);
-
-	$trial = true;
-
-	$payment = $this->payments->make_payment($billing_data, $trial);
+	$payment = $this->payments->make_payment(array('visa', '2039923394027162', '051989', 'Calvin', 'Froedge', gmdate("c"), 'month', '1', '3'), true);
 `
 
 This returns an object with $payment->response and $payment->status.  You can process these further from there.
