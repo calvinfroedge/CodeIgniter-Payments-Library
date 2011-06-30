@@ -34,7 +34,7 @@ class Payments
 	 * @param	array
 	 * @return	object
 	 */			
-	public function make_payment($billing_data, $trial)
+	public function make_payment($billing_data, $trial = NULL)
 	{
 		$payment_function = 'make_'.$this->check_payment_type().'_payment';
 		$payment = $this->$payment_function($this->check_payment_module(), $billing_data, $payment_function, $trial);
@@ -151,7 +151,7 @@ class Payments
 	 */	
 	private function check_payment_module()
 	{
-		return $this->ci->config->item('payment-system_default');
+		return ($this->ci->session->userdata('payment_system') != NULL ? $this->ci->session->userdata('payment_system') : $this->ci->config->item('payment-system_default'));
 	}
 	
 	/**
@@ -162,6 +162,7 @@ class Payments
 	 */	
 	public function set_payment_amount($billing_variables)
 	{
+		//Note, this logic will be dependent on your billing process.  You will need to customize this.
 		return number_format($billing_variables->child_billing_rate * $this->ci->session->userdata('num_children') + $billing_variables->family_billing_rate, 2, '.', '');
 	}	
 	
