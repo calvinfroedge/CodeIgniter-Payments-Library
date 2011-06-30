@@ -24,28 +24,28 @@ Note that the fields you put in $billing_data may vary depending on which paymen
 First, you need to make sure you have set payment type and payment method to your session (whether it is recurring or onetime, and which payment module you will use).  Note that if this is not set it will default to whatever you have in your config file.
 
 `
-$this->session->set_userdata(array('payment_type' => 'recurring', 'payment_system' => 'paypal'));
+	$this->session->set_userdata(array('payment_type' => 'recurring', 'payment_system' => 'paypal'));
 `
 
 Now, make your call.  Note that the second parameter could be just true or false.  I included both $billing_data array and $trial for clarity.
 
 `
-$billing_data = array( &#13;
-	$this->form_validation->set_value('billing_cc_type'), //credit card type &#13;
-	$this->form_validation->set_value('billing_cc_number'), //credit card number &#13;
-	$this->form_validation->set_value('billing_exp_date_mm').set_value('billing_exp_date_yyyy'), //credit card expiration date &#13;
-	$this->form_validation->set_value('billing_first_name'), //billing first name &#13;
-	$this->form_validation->set_value('billing_last_name'), //billing last name &#13;
-	gmdate("c"), &#13;
-	$billing_variables->billing_period, //month, year, etc &#13;
-	$billing_variables->billing_frequency, //how many times per period &#13;
-	$amount, //the amount to bill &#13;
-	$this->config->item('max_failed_payments') //The number of times a payment is allowed to fail &#13;
-);
+	$billing_data = array( &#13;
+		$this->form_validation->set_value('billing_cc_type'), //credit card type &#13;
+		$this->form_validation->set_value('billing_cc_number'), //credit card number &#13;
+		$this->form_validation->set_value('billing_exp_date_mm').set_value('billing_exp_date_yyyy'), //credit card expiration date &#13;
+		$this->form_validation->set_value('billing_first_name'), //billing first name &#13;
+		$this->form_validation->set_value('billing_last_name'), //billing last name &#13;
+		gmdate("c"), &#13;
+		$billing_variables->billing_period, //month, year, etc &#13;
+		$billing_variables->billing_frequency, //how many times per period &#13;
+		$amount, //the amount to bill &#13;
+		$this->config->item('max_failed_payments') //The number of times a payment is allowed to fail &#13;
+	);
 
-$trial = true;
+	$trial = true;
 
-$payment = $this->payments->make_payment($billing_data, $trial);
+	$payment = $this->payments->make_payment($billing_data, $trial);
 `
 
 This returns an object with $payment->response and $payment->status.  You can process these further from there.
