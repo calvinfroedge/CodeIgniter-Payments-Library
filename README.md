@@ -24,7 +24,7 @@ Note that the fields you put in $billing_data may vary depending on which paymen
 First, you need to make sure you have set payment type and payment method to your session (whether it is recurring or onetime, and which payment module you will use).  Note that if this is not set it will default to whatever you have in your config file.
 
 `
-	$this->session->set_userdata(array('payment_type' => 'recurring', 'payment_system' => 'paypal'));
+    $this->session->set_userdata(array('payment_type' => 'recurring', 'payment_system' => 'paypal'));
 `
 
 Now, make your call, passing in an array for $billing_data and a boolean for $trial (if you want to specify this is a free trial.
@@ -43,7 +43,7 @@ The params are (don't specify a key):
 - Max times a payment can fail before the subscription is invalidated.
 
 `
-	$payment = $this->payments->make_payment(array('visa', '2039923394027162', '051989', 'Calvin', 'Froedge', gmdate("c"), 'month', '1', '3'), true);
+    $payment = $this->payments->make_payment(array('visa', '2039923394027162', '051989', 'Calvin', 'Froedge', gmdate("c"), 'month', '1', '3'), true);
 `
 
 This returns an object with $payment->response and $payment->status.  You can process these further from there.
