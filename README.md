@@ -43,7 +43,7 @@ The params are (don't specify a key):
 - Max times a payment can fail before the subscription is invalidated.
 
 `
-    $payment = $this->payments->make_payment(array('visa', '2039923394027162', '051989', 'Calvin', 'Froedge', gmdate("c"), 'month', '1', '3'), true);
+    $payment = $this->payments->make_payment(array('visa', '2039923394027162', '051989', 'Calvin', 'Froedge', gmdate("c"), 'month', '1', '30.00', '3'), false);
 `
 
 This returns an object with $payment->response and $payment->status.  You can process these further from there.
