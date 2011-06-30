@@ -29,9 +29,8 @@ class Payments
 	/**
 	 * Make a new payment
 	 *
-	 * @param	string
-	 * @param	string
 	 * @param	array
+	 * @param	bool
 	 * @return	object
 	 */			
 	public function make_payment($billing_data, $trial = NULL)
@@ -55,6 +54,7 @@ class Payments
 	 * @param	string
 	 * @param	array
 	 * @param	string
+	 * @param	bool
 	 * @return	object
 	 */	
 	private function make_recurring_payment($payment_module, $billing_data, $payment_function, $trial = FALSE)
@@ -79,8 +79,7 @@ class Payments
 	/**
 	 * Update a profile for a given customer
 	 *
-	 * @param	string
-	 * @param	string
+	 * @param	array
 	 * @param	string
 	 * @return	object
 	 */			
@@ -101,8 +100,6 @@ class Payments
 	/**
 	 * Get profile info for a given customer
 	 *
-	 * @param	string
-	 * @param	string
 	 * @param	string
 	 * @return	object
 	 */			
