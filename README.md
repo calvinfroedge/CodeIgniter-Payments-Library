@@ -31,16 +31,16 @@ Now, make your call.  Note that the second parameter could be just true or false
 
 `
 	$billing_data = array( &#13;
-		$this->form_validation->set_value('billing_cc_type'), //credit card type &#13;
-		$this->form_validation->set_value('billing_cc_number'), //credit card number &#13;
-		$this->form_validation->set_value('billing_exp_date_mm').set_value('billing_exp_date_yyyy'), //credit card expiration date &#13;
-		$this->form_validation->set_value('billing_first_name'), //billing first name &#13;
-		$this->form_validation->set_value('billing_last_name'), //billing last name &#13;
-		gmdate("c"), &#13;
-		$billing_variables->billing_period, //month, year, etc &#13;
-		$billing_variables->billing_frequency, //how many times per period &#13;
-		$amount, //the amount to bill &#13;
-		$this->config->item('max_failed_payments') //The number of times a payment is allowed to fail &#13;
+	$this->form_validation->set_value('billing_cc_type'), //credit card type &#13;
+	$this->form_validation->set_value('billing_cc_number'), //credit card number &#13;
+	$this->form_validation->set_value('billing_exp_date_mm').set_value('billing_exp_date_yyyy'), //credit card expiration date &#13;
+	$this->form_validation->set_value('billing_first_name'), //billing first name &#13;
+	$this->form_validation->set_value('billing_last_name'), //billing last name &#13;
+	gmdate("c"), &#13;
+	$billing_variables->billing_period, //month, year, etc &#13;
+	$billing_variables->billing_frequency, //how many times per period &#13;
+	$amount, //the amount to bill &#13;
+	$this->config->item('max_failed_payments') //The number of times a payment is allowed to fail &#13;
 	);
 
 	$trial = true;
