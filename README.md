@@ -1,3 +1,8 @@
+NOTICE!!!!!
+============
+
+THIS PROJECT IS NO LONGER SUPPORTED!  ALL DEVELOPMENT HAS BEEN MOVED TO CODEIGNITER-PAYMENTS SPARK.  PLEASE CHECK IT OUT HERE: http://github.com/calvinfroedge/codeigniter-payments
+
 Installation
 ============
 
